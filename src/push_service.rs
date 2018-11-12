@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use futures::Future;
 use url::Url;
 
-use unknown::{DropJSObjects, PageRecord, ProcessQueue, UnknownOperation};
+use unknown::{nsISupports, DropJSObjects, PageRecord, ProcessQueue, UnknownOperation};
 
 use push_broadcast::Broadcasts;
 use push_components::PushSubscription;
@@ -61,7 +61,7 @@ impl PushService {
     fn uninit() {}
     fn startService() {}
     fn startObservers() {}
-    fn observe(aSubject: String, aTopic: String, aData: String) {}
+    fn observe(aSubject: nsISupports, aTopic: String, aData: String) {}
 
     fn register(aPageRecord: PageRecord) -> impl Future<Item = bool, Error = PushError> {}
     fn subscribeBroadcast(broadcastId: String, version: String) {}

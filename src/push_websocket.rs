@@ -1,11 +1,9 @@
-use std::collections::HashMap;
-
+/// Handle Websocket creation and interactions.
 use futures::Future;
 use url::Url;
 
-use unknown::*;
+use unknown::{nsISupports, BroadcastListener, Context, PageRecord};
 
-use push_broadcast::Broadcasts;
 use push_components::PushSubscription;
 use push_db::{PushDB, PushDBRecord};
 use push_record::PushRecord;
@@ -32,7 +30,7 @@ struct PushServiceWebSocket {
 impl PushServiceWebSocket {
     fn newPushDB() -> PushDB {}
     fn disconnect() {}
-    fn observe(aSubject: String, aTopic: String, aData: String) {}
+    fn observe(aSubject: nsISupports, aTopic: String, aData: String) {}
     fn validServerURI(serverURI: Url) -> bool {}
     fn init(
         Options: PushOptions,
@@ -45,7 +43,7 @@ impl PushServiceWebSocket {
 
     fn isConnected() -> bool {}
     fn reportDeliveryError(messageID: String, reason: u64) {}
-    fn register(record: PageRecord) -> PushRecord {}
+    fn register(record: PageRecord) -> Result<PushRecord, PushError> {}
     fn unregister(record: PushRecord, reason: u64) -> Result<PushRecord, PushError> {}
     fn sendSubscribeBroadcast(serviceId: String, version: String) {}
 }
@@ -55,6 +53,8 @@ struct PushRecordWebSocket {
     channelID: String,
     version: String,
 }
+
+// impl Into<PushSubscription> for PushRecordWebSocket{...}
 
 impl PushRecordWebSocket {
     fn get() {}

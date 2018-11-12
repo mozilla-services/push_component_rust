@@ -1,57 +1,68 @@
+/// Used by the Android GCM core.
+use std::time::Instant;
 
-use url::URI
+use futures::Future;
+use url::Url;
 
-use unknown::{ChromeUtils};
+use unknown::{nsISupports, BroadcastListener, ChromeUtils, EventDispatcher};
 
-use push_service::{PushService};
+use push_db::{PushDB, PushDBRecord};
+use push_service::{PushError, PushOptions, PushService};
 
 struct PushServiceAndroidGCM {
     mainPushService: PushService,
-    serverURI: URI,
+    serverURI: Url,
 }
 
-trait PushServiceAndroidGCM {
-    fn newPushDB() -> PushDB;
+impl PushServiceAndroidGCM {
+    fn newPushDB(&self) -> PushDB {}
 
-    fn validServerURI(serverURI: URI) -> bool;
+    fn validServerURI(&self, serverURI: Url) -> bool {}
 
-    fn observe(subject:??, topic:String, data:String);
+    fn observe(&self, subject: nsISupports, topic: String, data: String) {}
 
-    fn init(Options:PushOptions, mainPushService: PushService,
-        serverURL:URI)
-        -> PushServiceAndroidGCM;
+    fn init(
+        Options: PushOptions,
+        mainPushService: PushService,
+        serverURL: Url,
+    ) -> PushServiceAndroidGCM {
+    }
 
-    fn uninit();
+    fn uninit(&self) {}
 
-    fn onAlarmFired();
+    fn onAlarmFired(&self) {}
 
-    fn connect(records: Vec<PushDBRecord>,
-        broadcastListeners: Vec<BroadcastListeners>) -> Promise;
+    fn connect(
+        &self,
+        records: Vec<PushDBRecord>,
+        broadcastListeners: Vec<BroadcastListener>,
+    ) -> impl Future<Item = bool, Error = PushError> {
+    }
 
-    fn sendSubscribeBroadcast(serviceId:String, version:String);
+    fn sendSubscribeBroadcast(&self, serviceId: String, version: String) {}
 
-    fn isConnected() -> bool;
+    fn isConnected(&self) -> bool {}
 
-    fn disconnect();
+    fn disconnect(&self) {}
 
-    fn register(record:PushDBRecord) -> PushRecordAndroidGCM;
+    fn register(&self, record: PushDBRecord) -> PushRecordAndroidGCM {}
 
-    fn unregister(record:PushDBRecord) -> EventDispatcher;
+    fn unregister(&self, record: PushDBRecord) -> EventDispatcher {}
 }
 
 struct PushRecordAndroidGCM {
     channelID: String,
-    pushEndpoint: URI,
-    scope:String,
+    pushEndpoint: Url,
+    scope: String,
     originAttributes: ChromeUtils::Principal::OriginAttributes,
-    ctime: Time,
-    systemRecord:bool,
+    ctime: Instant,
+    systemRecord: bool,
     p256dhPublicKey: Vec<u8>,
     p256dhPrivateKey: Vec<u8>,
     authenticationSecret: Vec<u8>,
     appServerKey: Vec<u8>,
 }
 
-trait PushRecordAndroidGCM {
-    fn get() -> String;
+impl PushRecordAndroidGCM {
+    fn get(&self) -> String {}
 }

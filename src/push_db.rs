@@ -1,13 +1,19 @@
-use unknown::*;
+use unknown::{ChromeUtils, DBHandle, TestClause, TransactionHandle};
 
 use futures::Future;
-
-use push_broadcast::PageRecord;
-use push_record::PushRecord;
 
 pub struct PushDBError {}
 
 pub type DBError = Box<PushDBError>;
+
+pub struct PageRecord {
+    pub scope: Option<String>,
+    pub appServerKey: Option<Vec<u8>>,
+    pub requestID: Option<u64>,
+    pub domain: Option<String>,
+    pub systemRecord: bool,
+    pub originAttributes: ChromeUtils::Principal::OriginAttributes,
+}
 
 pub struct PushDBRecord {
     keyID: String,
@@ -18,6 +24,8 @@ pub struct PushDBRecord {
 
 pub struct PushDB;
 
+/// Push Endpoint Database manager
+/// This handles information about given endpoints.
 impl PushDB {
     pub fn new(
         dbName: String,

@@ -19,15 +19,6 @@ pub struct Broadcasts {
     pub version: String,
 }
 
-pub struct PageRecord {
-    pub scope: Option<String>,
-    pub appServerKey: Option<Vec<u8>>,
-    pub requestID: Option<u64>,
-    pub domain: Option<String>,
-    pub systemRecord: bool,
-    pub originAttributes: ChromeUtils::Principal::OriginAttributes,
-}
-
 // External
 impl BroadcastService {
     // aka "new"

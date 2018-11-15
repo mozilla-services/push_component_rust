@@ -1,3 +1,8 @@
+/// Renamed from push_http2 since that name raised confusion.
+///
+/// Apple Push Notification System (APNS) uses http2 as their communications
+/// channel, so does RFC8030 WebPush. This can cause confusion for folks who
+/// believe that this is using http2 for non APNS reasons.
 use std::time::Instant;
 use url::Url;
 
@@ -7,6 +12,8 @@ use unknown::{nsIHttpChannel, ChromeUtils, Context, InputStream, QueryInterface,
 
 use push_components::PushSubscription;
 use push_service::{PushError, PushOptions, PushService};
+
+pub struct PushSubscriptionListener;
 
 // External?
 trait PushSubscriptionListener {
@@ -24,7 +31,7 @@ trait PushSubscriptionListener {
     fn disconnect();
 }
 
-struct PushChannelListener {
+pub struct PushChannelListener {
     mainListener: PushSubscriptionListener,
     message: Vec<u8>,
     ackUri: Option<Url>,
@@ -44,7 +51,7 @@ impl PushChannelListener {
     fn onStopRequest(aRequest: Request, aContext: Context, aStatusCode: u64) {}
 }
 
-trait PushServiceHttp2 {
+trait PushServiceApns {
     fn init(
         aOptions: PushOptions,
         aMainPushService: PushService,
@@ -52,7 +59,7 @@ trait PushServiceHttp2 {
     ) -> Future<Item = Self, Error = PushError>;
     fn startConnections(aSubscriptions: Vec<PushSubscription>);
     fn uninit();
-    fn unregister(aRecord: PushRecordHttp2) -> Future<Item = bool, Error = PushError>;
+    fn unregister(aRecord: PushRecordApns) -> Future<Item = bool, Error = PushError>;
     fn reportDeliveryError(messageID: String, reason: u64);
 
     // External?
@@ -63,6 +70,8 @@ trait PushServiceHttp2 {
     // External?
     fn getHeaderField(aRequest: Request, name: String) -> Option<String>;
 }
+
+pub struct PushServiceDelete;
 
 // External?
 trait PushServiceDelete {
@@ -83,10 +92,8 @@ struct PushEndpoint {
     pushReceiptEndpoint: String,
 }
 
-struct SubscriptionListener {
+pub struct SubscriptionListener {
     subInfo: PushSubscription,
-    // resolve: Promise,
-    // reject:Promise,
     data: Vec<u8>,
     serverURI: Url,
     service: PushService,
@@ -111,7 +118,7 @@ impl SubscriptionListener {
     fn linkParser(linkHeader: String, serverURI: Url) -> Result<PushEndpoint, PushError> {}
 }
 
-struct PushRecordHttp2 {
+pub struct PushRecordApns {
     subscriptionUri: Url,
     pushEndpoint: Url,
     pushReceiptEndpoint: Url,
@@ -122,17 +129,17 @@ struct PushRecordHttp2 {
     ctime: Instant,
 }
 
-impl PushRecordHttp2 {
+impl PushRecordApns {
     // External?
     fn init(
         aOptions: PushOptions,
         aMainPushService: PushService,
         aServerURL: Url,
-    ) -> impl Future<Item = PushRecordHttp2, Error = PushError> {
+    ) -> impl Future<Item = PushRecordApns, Error = PushError> {
     }
     fn startConnections(aSubscriptions: Vec<PushSubscription>) {}
     fn uninit() {}
-    fn unregister(aRecord: PushRecordHttp2) -> impl Future<Item = bool, Error = PushError> {}
+    fn unregister(aRecord: PushRecordApns) -> impl Future<Item = bool, Error = PushError> {}
     fn reportDeliveryError(messageID: String, reason: u64) {}
 
     // External?
@@ -145,6 +152,6 @@ impl PushRecordHttp2 {
         None
     }
 
-    fn new(record: PushRecordHttp2) {}
+    fn new(record: PushRecordApns) {}
     fn toSubscription() -> PushSubscription {}
 }

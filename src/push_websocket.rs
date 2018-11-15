@@ -4,9 +4,8 @@ use url::Url;
 
 use unknown::{nsISupports, BroadcastListener, Context};
 
-use push_broadcast::PageRecord;
 use push_components::PushSubscription;
-use push_db::{PushDB, PushDBRecord};
+use push_db::{PageRecord, PushDB, PushDBRecord};
 use push_record::PushRecord;
 use push_service::{PushError, PushOptions, PushService};
 

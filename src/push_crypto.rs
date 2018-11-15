@@ -28,21 +28,20 @@ pub struct P256DH_Raw_Key {
 
 pub fn getEncryptionKeyParams(encryptKeyField: String) -> Result<PushCryptoParams, CryptoError> {}
 
-// parse the encryption key header
+/// parse the encryption key header
 pub fn getEncryptionParams(encryptField: String) -> Result<PushCryptoParams, CryptoError> {}
 
-// parse the encryption header
+/// parse the encryption header
 pub fn getCryptoParamsFromPayload(payload: Vec<u8>) -> Result<PushCryptoParams, CryptoError> {}
 
-// parse encryption vals from the payload
+/// parse encryption vals from the payload
 pub fn getCryptoParamsFromHeaders(
     headers: HashMap<String, String>,
 ) -> Result<PushCryptoParams, CryptoError> {
 }
 
-// wrapper to pull crypto info from headers.
+// The following are utility functions. Could they go into a separate file?
 pub fn base64URLDecode(value: String) -> Result<Vec<u8>, PushError> {}
-
 pub fn chunkArray(array: Vec<u8>, size: usize) -> Vec<u8> {}
 pub fn concatArray(arrays: Vec<Vec<u8>>) -> Vec<u8> {}
 pub fn hmac(key: Vec<u8>) -> Vec<u8> {}
@@ -54,6 +53,7 @@ pub fn encodeLength(buffer: Vec<u8>) -> Vec<u8> {}
 
 pub struct Decoder {}
 
+/// Decode a given encrypted message.
 impl Decoder {
     // External?
     pub fn new(
@@ -78,25 +78,21 @@ impl Decoder {
     pub fn chunkSize() -> u64 {}
 }
 
-trait OldSchemeDecoder {
-    fn decode() -> Vec<u8>;
-    fn unpadChunk(decoded: Vec<u8>) -> Vec<u8>;
-    fn chunkSize() -> u64;
-    fn padSize() -> u64;
-}
-
+/// RFC8291 compliant decryption decoder
 trait aes128gcmDecoder {
     fn unpadChunk(decoded: Vec<u8>, last: bool) -> Vec<u8>;
     fn chunkSize() -> u64;
     fn deriveKeyAndNonce(ikm: Vec<u8>) -> Result<Vec<u8>, CryptoError>;
 }
 
+/// General Push Crypto functions.
 trait PushCrypto {
     fn generateAuthenticationSecret() -> Vec<u8>;
     fn validateAppServerKey(key: Vec<u8>) -> Result<Vec<u8>, CryptoError>;
     fn generateKeys() -> Vec<Vec<u8>>;
 }
 
+/// Decrypt a given push message based on the header and body content
 // External
 pub fn decrypt(
     privateKey: Vec<u8>,
@@ -107,6 +103,7 @@ pub fn decrypt(
 ) -> Result<Vec<u8>, CryptoError> {
 }
 
+/// Encrypt a given push message to RFC 8291.
 // External
 pub fn encrypt(
     plaintext: Vec<u8>,
@@ -116,6 +113,7 @@ pub fn encrypt(
 ) -> (Vec<u8>, String) {
 }
 
+/// RFC8291 compliant decryption decoder
 trait aes128gcmEncoder {
     // External
     fn new(
@@ -139,4 +137,12 @@ trait aes128gcmEncoder {
         senderPrivateKey: Vec<u8>,
     ) -> Result<Vec<u8>, CryptoError>;
     fn createHeader(key: Vec<u8>) -> Vec<u8>;
+}
+// Scheme specific decoders
+// "aesgcm" which should be dropped, since it's very old.
+trait OldSchemeDecoder {
+    fn decode() -> Vec<u8>;
+    fn unpadChunk(decoded: Vec<u8>) -> Vec<u8>;
+    fn chunkSize() -> u64;
+    fn padSize() -> u64;
 }

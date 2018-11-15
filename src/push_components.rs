@@ -21,10 +21,6 @@ impl PushServiceBase {
     pub fn observe(subject: nsISupports, topic: String, data: Vec<u8>) {}
 }
 
-// trait PushServiceParent: PushServiceBase{
-// extends PushServiceBase
-// }
-
 trait PushServiceContent {
     // External?
     fn subscribe(scope: String, principal: SystemPrincipal, callback: JSCallback);
@@ -43,17 +39,18 @@ trait PushServiceContent {
 
     // External?
     fn clearForDomain(domain: String, callback: JSCallback);
+
+    // External?
+    fn unsubscribe(scope: String, principal: SystemPrincipal, callback: JSCallback);
+
     fn notificationForOriginShown(origin: String);
     fn notificationForOriginClosed(origin: String);
     fn reportDeliveryError(messageId: String, reason: u64);
     fn receiveMessage(message: PushMessage);
-
-    // External?
-    fn unsubscribe(scope: String, principal: SystemPrincipal, callback: JSCallback);
 }
 
 trait PushServiceParent: PushServiceContent {
-    // extends PushServiceContent
+    // extends PushServiceContent so final obj should use PushServiceContent + PushServiceParent
     fn replaceServiceBackend(Options: PushOptions);
 
     fn restoreServiceBackend();
@@ -74,6 +71,7 @@ pub struct PushSubscription {
 }
 
 // External
+/// These are mostly "getter" functions.
 impl PushSubscription {
     pub fn endpoint(&self) -> String {
         self.aEndpoint

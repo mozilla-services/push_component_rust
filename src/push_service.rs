@@ -8,13 +8,13 @@ use unknown::{
     nsISupports, DropJSObjects, JSCallback, ProcessQueue, SystemPrincipal, UnknownOperation,
 };
 
-use push_broadcast::{Broadcasts, PageRecord};
+use push_broadcast::Broadcasts;
 use push_components::PushSubscription;
 use push_crypto::CryptoError;
-use push_db::PushDB;
+use push_db::{PageRecord, PushDB};
 use push_record::PushRecord;
 
-pub enum PushServiceEvent {
+enum PushServiceEvent {
     STARTING_SERVICE_EVENT,
     CHANGING_SERVICE_EVENT,
     STOPPING_SERVICE_EVENT,
@@ -51,7 +51,7 @@ pub struct PushMessage {
     buffer: Vec<u8>,
 }
 
-pub enum PushServiceState {
+enum PushServiceState {
     PUSH_SERVICE_UNINIT,
     PUSH_SERVICE_INIT,
     PUSH_SERVICE_ACTIVATING,
@@ -127,6 +127,6 @@ impl PushService {
     fn getAllUnexpired() -> Option<Vec<PushRecord>> {}
 }
 
-pub struct PushServiceOptions {
+struct PushServiceOptions {
     pub serverURI: Url,
 }

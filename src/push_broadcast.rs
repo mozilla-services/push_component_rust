@@ -4,8 +4,8 @@ use push_service::PushService;
 use unknown::{ChromeUtils, JSONFile};
 
 pub struct BroadcastService {
-    pub pushService: PushService,
-    pub jsonFile: JSONFile,
+    pub service: PushService,
+    pub listenerPath: JSONFile,
     // pub initializePromise: Promise,
 }
 
@@ -28,11 +28,16 @@ pub struct PageRecord {
     pub originAttributes: ChromeUtils::Principal::OriginAttributes,
 }
 
+// External
 impl BroadcastService {
-    pub fn initializeBroadcastService() -> BroadcastService {
+    // aka "new"
+    pub fn initializeBroadcastService(
+        service: PushService,
+        listenerPath: JSONFile,
+    ) -> BroadcastService {
         BroadcastService {
-            pushService: PushService {},
-            jsonFile: JSONFile {},
+            service,
+            listenerPath,
             // initializePromise: Promise{}
         }
     }
@@ -46,4 +51,7 @@ impl BroadcastService {
     pub fn addListener(broadcastId: String, version: String, sourceInfo: SourceInfo) {}
 
     pub fn receivedBroadcastMessage(broadcasts: Vec<Broadcasts>) {}
+
+    // (used in testing)
+    pub fn _saveImmediately() {}
 }

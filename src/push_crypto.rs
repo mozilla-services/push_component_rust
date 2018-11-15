@@ -20,6 +20,12 @@ pub struct PushCryptoParams {
     ciphertext: Vec<u8>,
 }
 
+pub struct P256DH_Raw_Key {
+    x: u64,
+    y: u64,
+    private: u64,
+}
+
 pub fn getEncryptionKeyParams(encryptKeyField: String) -> Result<PushCryptoParams, CryptoError> {}
 
 // parse the encryption key header
@@ -49,6 +55,7 @@ pub fn encodeLength(buffer: Vec<u8>) -> Vec<u8> {}
 pub struct Decoder {}
 
 impl Decoder {
+    // External?
     pub fn new(
         privateKey: JSONWebKey,
         publicKey: Vec<u8>,
@@ -90,6 +97,7 @@ trait PushCrypto {
     fn generateKeys() -> Vec<Vec<u8>>;
 }
 
+// External
 pub fn decrypt(
     privateKey: Vec<u8>,
     publicKey: Vec<u8>,
@@ -99,6 +107,7 @@ pub fn decrypt(
 ) -> Result<Vec<u8>, CryptoError> {
 }
 
+// External
 pub fn encrypt(
     plaintext: Vec<u8>,
     receiverPublicKey: Vec<u8>,
@@ -108,6 +117,7 @@ pub fn encrypt(
 }
 
 trait aes128gcmEncoder {
+    // External
     fn new(
         plaintext: Vec<u8>,
         receiverPublicKey: Vec<u8>,
@@ -116,7 +126,9 @@ trait aes128gcmEncoder {
         salt: Vec<u8>,
         rs: Vec<u8>,
     );
+    // External
     fn encode();
+    // External
     fn encrypt(key: Vec<u8>, nonce: Vec<u8>) -> Result<Vec<Vec<u8>>, CryptoError>;
     fn deriveKeyAndNonce(
         sharedSecret: Vec<u8>,

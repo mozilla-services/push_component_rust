@@ -4,9 +4,11 @@ use std::collections::HashMap;
 use futures::Future;
 use url::Url;
 
-use unknown::{nsISupports, DropJSObjects, PageRecord, ProcessQueue, UnknownOperation};
+use unknown::{
+    nsISupports, DropJSObjects, JSCallback, ProcessQueue, SystemPrincipal, UnknownOperation,
+};
 
-use push_broadcast::Broadcasts;
+use push_broadcast::{Broadcasts, PageRecord};
 use push_components::PushSubscription;
 use push_crypto::CryptoError;
 use push_db::PushDB;
@@ -31,7 +33,6 @@ pub fn errorWithResult(message: String, result: u64) -> PushError {
 }
 
 pub struct PushService {
-    pub service: PushService,
     pub state: PushServiceState,
     pub db: PushDB,
     pub Options: PushOptions,
@@ -40,6 +41,9 @@ pub struct PushService {
     pub pendingRegisterRequest: HashMap<String, Result<PushSubscription, PushError>>,
     pub notifyActivated: Future<Item = bool, Error = PushError>,
     pub activated: bool,
+    pub pushTopic: String,
+    pub subscriptionChangeTopic: String,
+    pub subscriptionModifiedTopic: String,
 }
 
 pub struct PushMessage {
@@ -57,18 +61,25 @@ pub enum PushServiceState {
 }
 
 impl PushService {
+    // External
     fn init(Options: PushOptions) {}
+    // External
     fn uninit() {}
-    fn startService() {}
-    fn startObservers() {}
+    // External
     fn observe(aSubject: nsISupports, aTopic: String, aData: String) {}
-
-    fn register(aPageRecord: PageRecord) -> impl Future<Item = bool, Error = PushError> {}
-    fn subscribeBroadcast(broadcastId: String, version: String) {}
+    // External
+    fn registration(aPageRecord: PageRecord) -> impl Future<Item = bool, Error = PushError> {}
+    // External
+    fn getSubscription(scope: String, principal: SystemPrincipal, callback: JSCallback) {}
+    // External
     fn unregister(aPageRecord: PageRecord) -> impl Future<Item = bool, Error = PushError> {}
+    // External?
+    fn stateChangeProcessEnqueue(op: UnknownOperation) -> Result<Option<ProcessQueue>, PushError> {}
+
+    fn subscribeBroadcast(broadcastId: String, version: String) {}
     fn clear(info: PageRecord) -> impl Future<Item = bool, Error = PushError> {}
     fn registration(aPageRecord: PageRecord) -> Option<PushSubscription> {}
-    fn stateChangeProcessEnqueue(op: UnknownOperation) -> Result<Option<ProcessQueue>, PushError> {}
+
     fn checkActivated() -> impl Future<Item = bool, Error = PushError> {}
 
     fn makePendingKey(aPageRecord: PageRecord) -> String {}

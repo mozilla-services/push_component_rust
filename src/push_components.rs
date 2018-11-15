@@ -1,10 +1,11 @@
 use std::time::Instant;
 
-use unknown::{ChromeUtils, ComponentID, JSCallback, SystemPrincipal};
+use unknown::{nsISupports, ChromeUtils, ComponentID, JSCallback, SystemPrincipal};
 
 use push_crypto::P256DH_Raw_Key;
 use push_service::{PushMessage, PushOptions};
 
+// External?
 /// DOM interface for the Push Component
 pub struct PushServiceBase {
     pub classID: ComponentID,
@@ -15,8 +16,9 @@ pub struct PushServiceBase {
     pub subscriptionModifiedTopic: String,
 }
 
+// External?
 impl PushServiceBase {
-    pub fn observe(subject: String, topic: String, data: Vec<u8>) {}
+    pub fn observe(subject: nsISupports, topic: String, data: Vec<u8>) {}
 }
 
 // trait PushServiceParent: PushServiceBase{
@@ -24,7 +26,10 @@ impl PushServiceBase {
 // }
 
 trait PushServiceContent {
+    // External?
     fn subscribe(scope: String, principal: SystemPrincipal, callback: JSCallback);
+
+    // External?
     fn subscribeWithKey(
         scope: String,
         principal: SystemPrincipal,
@@ -32,12 +37,18 @@ trait PushServiceContent {
         key: Vec<u8>,
         callback: JSCallback,
     );
+
+    // External?
     fn getSubscription(scope: String, principal: SystemPrincipal, callback: JSCallback);
+
+    // External?
     fn clearForDomain(domain: String, callback: JSCallback);
     fn notificationForOriginShown(origin: String);
     fn notificationForOriginClosed(origin: String);
     fn reportDeliveryError(messageId: String, reason: u64);
     fn receiveMessage(message: PushMessage);
+
+    // External?
     fn unsubscribe(scope: String, principal: SystemPrincipal, callback: JSCallback);
 }
 
@@ -62,10 +73,12 @@ pub struct PushSubscription {
     is_system: bool,
 }
 
+// External
 impl PushSubscription {
     pub fn endpoint(&self) -> String {
         self.aEndpoint
     }
+
     pub fn lastPush(&self) -> Instant {
         self.modified
     }
@@ -78,7 +91,6 @@ impl PushSubscription {
     pub fn isSystemSubscription(&self) -> bool {
         self.is_system
     }
-
     /// return private half of self.aRawP256dhKey
     pub fn p256dhPrivateKey(&self) -> Vec<u8> {}
 

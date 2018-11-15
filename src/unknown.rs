@@ -28,8 +28,6 @@ pub struct JSONWebKey {}
 
 // pub struct Promise {} // This is a rust futures handler
 
-pub struct PageRecord {}
-
 pub struct ProcessQueue {}
 
 pub struct QueryInterface {}

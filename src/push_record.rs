@@ -22,6 +22,7 @@ pub struct PushRecord {
     principal: SystemPrincipal,
 }
 
+// External?
 impl PushRecord {
     fn setQuota(suggestedQuota: u64) {}
     fn resetQuota() {}

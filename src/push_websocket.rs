@@ -2,8 +2,9 @@
 use futures::Future;
 use url::Url;
 
-use unknown::{nsISupports, BroadcastListener, Context, PageRecord};
+use unknown::{nsISupports, BroadcastListener, Context};
 
+use push_broadcast::PageRecord;
 use push_components::PushSubscription;
 use push_db::{PushDB, PushDBRecord};
 use push_record::PushRecord;
@@ -13,6 +14,7 @@ struct PushWebSocketListner {
     pushservice: PushService,
 }
 
+// External?
 trait PushWebSocketListener {
     fn onStart(context: Context);
     fn onStop(context: Context, statusCode: u64);
@@ -28,8 +30,11 @@ struct PushServiceWebSocket {
 }
 
 impl PushServiceWebSocket {
+    // External
     fn newPushDB() -> PushDB {}
     fn disconnect() {}
+
+    // External?
     fn observe(aSubject: nsISupports, aTopic: String, aData: String) {}
     fn validServerURI(serverURI: Url) -> bool {}
     fn init(
@@ -39,6 +44,8 @@ impl PushServiceWebSocket {
     ) -> impl Future<Error = PushError, Item = Self> {
     }
     fn uninit() {}
+
+    // External?
     fn connect(records: Vec<PushDBRecord>, broadcastListeners: Vec<BroadcastListener>) {}
 
     fn isConnected() -> bool {}

@@ -2,6 +2,7 @@ use unknown::*;
 
 use futures::Future;
 
+use push_broadcast::PageRecord;
 use push_record::PushRecord;
 
 pub struct PushDBError {}
@@ -33,6 +34,7 @@ impl PushDB {
 
     pub fn isValidRecord(record: PushDBRecord) {}
 
+    // External?
     pub fn upgradeSchema(
         aTransaction: TransactionHandle,
         aDb: DBHandle,
@@ -41,10 +43,13 @@ impl PushDB {
     ) {
     }
 
+    // External
     pub fn put(aRecord: PushDBRecord) -> impl Future<Item = bool, Error = DBError> {}
 
+    // External
     pub fn delete(aKeyID: String) -> impl Future<Item = bool, Error = DBError> {}
 
+    // External?
     pub fn clearIf(testFn: TestClause) -> impl Future<Item = bool, Error = DBError> {}
 
     pub fn getByPushEndpoint(
@@ -54,6 +59,7 @@ impl PushDB {
 
     pub fn getByKeyId(aKeyId: String) -> impl Future<Item = PushDBRecord, Error = DBError> {}
 
+    // External?
     pub fn forEachOrigin(
         origin: String,
         originAttributes: ChromeUtils::Principal::OriginAttributes,
@@ -66,6 +72,7 @@ impl PushDB {
     ) -> impl Future<Item = PushDBRecord, Error = DBError> {
     }
 
+    // External?
     pub fn getAllByOriginAttributes(
         aOriginAttributes: ChromeUtils::Principal::OriginAttributes,
     ) -> impl Future<Item = Vec<PushDBRecord>, Error = DBError> {
@@ -80,5 +87,9 @@ impl PushDB {
     pub fn update(aKeyID: String, aUpdateFunc: fn(_)) -> impl Future<Item = bool, Error = DBError> {
     }
 
+    // External
+    pub fn close() {}
+
+    // External
     pub fn drop() -> impl Future<Item = bool, Error = DBError> {}
 }

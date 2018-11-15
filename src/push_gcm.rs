@@ -15,12 +15,15 @@ struct PushServiceAndroidGCM {
 }
 
 impl PushServiceAndroidGCM {
+    // External
     fn newPushDB(&self) -> PushDB {}
 
     fn validServerURI(&self, serverURI: Url) -> bool {}
 
+    // External?
     fn observe(&self, subject: nsISupports, topic: String, data: String) {}
 
+    // External
     fn init(
         Options: PushOptions,
         mainPushService: PushService,
@@ -32,6 +35,7 @@ impl PushServiceAndroidGCM {
 
     fn onAlarmFired(&self) {}
 
+    // External
     fn connect(
         &self,
         records: Vec<PushDBRecord>,
@@ -45,11 +49,14 @@ impl PushServiceAndroidGCM {
 
     fn disconnect(&self) {}
 
+    // External
     fn register(&self, record: PushDBRecord) -> PushRecordAndroidGCM {}
 
+    // External?
     fn unregister(&self, record: PushDBRecord) -> EventDispatcher {}
 }
 
+// External?
 struct PushRecordAndroidGCM {
     channelID: String,
     pushEndpoint: Url,

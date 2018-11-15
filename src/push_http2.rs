@@ -8,6 +8,7 @@ use unknown::{nsIHttpChannel, ChromeUtils, Context, InputStream, QueryInterface,
 use push_components::PushSubscription;
 use push_service::{PushError, PushOptions, PushService};
 
+// External?
 trait PushSubscriptionListener {
     fn getInterface(aIID: ChromeUtils::generateQI) -> QueryInterface;
     fn onStartRequest(aRequest: Request, aContext: Context) {} //NOOP
@@ -29,6 +30,7 @@ struct PushChannelListener {
     ackUri: Option<Url>,
 }
 
+// External?
 impl PushChannelListener {
     fn onStartRequest(aRequest: Request, aContext: Context) {}
     fn onDataAvailable(
@@ -52,12 +54,17 @@ trait PushServiceHttp2 {
     fn uninit();
     fn unregister(aRecord: PushRecordHttp2) -> Future<Item = bool, Error = PushError>;
     fn reportDeliveryError(messageID: String, reason: u64);
+
+    // External?
     fn connOnStop(aRequest: Request, aSuccess: bool, aSubscriptionUri: Url);
     fn addListenerPendingRetry(aListener: SubscriptionListener);
     fn removeListenerPendingRetry(aListener: SubscriptionListener);
+
+    // External?
     fn getHeaderField(aRequest: Request, name: String) -> Option<String>;
 }
 
+// External?
 trait PushServiceDelete {
     fn new() -> Self;
     fn onStartRequest(aRequest: Request, aContext: Context);
@@ -87,6 +94,7 @@ struct SubscriptionListener {
     retryTimeoutID: Fn(_),
 }
 
+// External?
 impl SubscriptionListener {
     fn onStartRequest(aRequest: Request, aContext: Context) {}
     fn onDataAvailable(
@@ -115,6 +123,7 @@ struct PushRecordHttp2 {
 }
 
 impl PushRecordHttp2 {
+    // External?
     fn init(
         aOptions: PushOptions,
         aMainPushService: PushService,
@@ -125,9 +134,13 @@ impl PushRecordHttp2 {
     fn uninit() {}
     fn unregister(aRecord: PushRecordHttp2) -> impl Future<Item = bool, Error = PushError> {}
     fn reportDeliveryError(messageID: String, reason: u64) {}
+
+    // External?
     fn connOnStop(aRequest: Request, aSuccess: bool, aSubscriptionUri: Url) {}
     fn addListenerPendingRetry(aListener: SubscriptionListener) {}
     fn removeListenerPendingRetry(aListener: SubscriptionListener) {}
+
+    // External?
     fn getHeaderField(aRequest: Request, name: String) -> Option<String> {
         None
     }

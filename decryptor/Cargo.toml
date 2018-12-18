@@ -1,9 +1,0 @@
-[package]
-name = "Push Decyrptor subcomponent"
-version = "0.1.0"
-authors = ["jrconlin <jconlin+git@mozilla.com>"]
-edition = "2018"
-
-[dependencies]
-ffi-support="0.1"
-

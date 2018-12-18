@@ -1,9 +1,0 @@
-[package]
-name = "push_component"
-version = "0.1.0"
-authors = ["jr conlin<jr+push_component@mozilla.com"]
-
-[dependencies]
-futures="0.1"
-serde="*"
-url="*"

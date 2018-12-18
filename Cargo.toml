@@ -1,0 +1,2 @@
+[workspace]
+members = ["communications", "crypto", "delivery_mgr", "notifier", "storage", "subscriber"]

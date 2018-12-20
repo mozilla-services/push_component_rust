@@ -9,11 +9,13 @@
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
+extern crate storage;
 
 use std::collections::HashMap;
 
-pub struct RegisterResponse {
+use storage::Storage;
 
+pub struct RegisterResponse {
     // the UAID & Channel ID associated with the request
     uaid: String,
     channel_id: String,
@@ -35,15 +37,29 @@ pub enum BroadcastValue {
     Nested(HashMap<String, BroadcastValue>),
 }
 
+/* TODO: Fill these out with Failures
+ */
 pub struct ConnectionError;
 
 pub trait Connection {
-
     // Generate a new connection & send a "hello"
-    fn new<C: Connection>(url: String, options: HashMap<String, String>) -> Result<C, ConnectionError>;
+    fn new<C: Connection>(
+        url: String,
+        options: HashMap<String, String>,
+    ) -> Result<C, ConnectionError>;
+
+    // get the connection UAID
+    fn uaid() -> String;
+
+    // reset UAID. This causes all known subscriptions to be reset.
+    fn reset_uaid<S: Storage>(storage: &S) -> Result<bool, ConnectionError>;
 
     // send a new subscription request to the server, get back the server registration response.
-    fn subscribe(channel_id: &str, vapid_public_key: &str, registration_token: &str) -> Result<RegisterResponse, ConnectionError>;
+    fn subscribe(
+        channel_id: &str,
+        vapid_public_key: Option<&str>,
+        registration_token: Option<&str>,
+    ) -> Result<RegisterResponse, ConnectionError>;
 
     // Drop an endpoint
     fn unsubscribe(channel_id: &str, auth: &str) -> Result<bool, ConnectionError>;
@@ -64,4 +80,3 @@ pub trait Connection {
     //impl TODO: Handle a Ping response with updated Broadcasts.
     //impl TODO: Handle an incoming Notification
 }
-

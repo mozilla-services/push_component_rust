@@ -10,21 +10,23 @@ extern crate storage;
 
 use storage::Storage;
 
-pub trait DeliveryManager{
-
+pub trait DeliveryManager {
     fn new<D: DeliveryManager, S: Storage>(storage: S) -> D;
 
     // checks and increments quota (if needed)
-    fn check_quota(chid: &Vec<u8>) -> bool;
+    fn check_quota(chid: &str) -> bool;
 
     // resets quota back to zero.
-    fn reset_quota(chid: &Vec<u8>) -> bool;
+    fn reset_quota(chid: &str) -> bool;
 
     // sets the quota for the chid.
-    fn set_quota(chid: &Vec<u8>, quota: u64, system: bool);
+    fn set_quota(chid: &str, quota: u64, system: bool);
 
     // is this a private, high priviledge "system" call?
-    fn is_system(chid: &Vec<u8>) -> bool;
+    fn is_system(chid: &str) -> bool;
+
+    // send the notification to the recipient.
+    fn dispatch(chid: &str, content: Vec<u8>);
 }
 
 /*

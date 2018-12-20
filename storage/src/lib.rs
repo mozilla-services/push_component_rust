@@ -1,7 +1,10 @@
 /* Handle Push data storage
  */
+extern crate crypto;
 
 use std::collections::HashMap;
+
+use crypto::Key;
 
 pub type ChannelID = String;
 
@@ -52,7 +55,20 @@ pub struct PushRecord {
 pub struct StorageError;
 
 pub trait Storage {
+    // Connect to the storage system
     fn connect<S: Storage>() -> S;
+
+    // Generate a Push Record from the Subscription info, which has the endpoint,
+    // encryption keys, etc.
+    fn create_record(
+        uaid: &str,
+        chid: &str,
+        origin_attributes: HashMap<String, String>,
+        endpoint: &str,
+        auth: Vec<u8>,
+        private_key: &Key,
+        system_record: bool,
+    ) -> PushRecord;
     fn get_record(uaid: &str, chid: &str) -> Option<PushRecord>;
     fn put_record(uaid: &str, chid: &str, record: &PushRecord) -> Result<bool, StorageError>;
     fn purge(uaid: &str, chid: Option<&str>) -> Result<bool, StorageError>;

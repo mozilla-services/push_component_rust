@@ -5,7 +5,8 @@ authors = ["jrconlin <me+crypt@jrconlin.com>"]
 edition = "2018"
 
 [dependencies]
+communications = {path = "../communications"}
 storage = {path = "../storage"}
-notifier = {path = "../notifier"}
+crypto =  {path = "../crypto"}
 serde = "1.0"
 serde_json = "1.0"

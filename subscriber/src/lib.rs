@@ -4,15 +4,15 @@
 
 extern crate serde_json;
 
-extern crate crypto;
 extern crate communications;
+extern crate crypto;
 extern crate storage;
 
 use std::collections::HashMap;
 
-use storage::{ChannelID, Storage, Store};
 use communications::{Connect, Connection, ConnectionError};
 use crypto::{Crypto, Cryptography, Key};
+use storage::{ChannelID, Storage, Store};
 
 pub struct SubscriptionError;
 
@@ -36,7 +36,7 @@ pub trait Subscriber {
         origin_attributes: HashMap<String, String>, // Does this include the origin proper?
         app_server_key: Option<&str>,               // Passed to server.
         registration_key: Option<&str>,             // Local OS push registration ID
-        priviledged: bool                           // Is this a system call / skip encryption?
+        priviledged: bool,                          // Is this a system call / skip encryption?
     ) -> Result<Subscription, SubscriptionError>;
 
     // Update an existing subscription (change bridge endpoint)
@@ -52,19 +52,19 @@ pub trait Subscriber {
     // to_json -> impl Into::<String> for Subscriber...
 }
 
-
 impl Subscriber for Subscription {
     fn get_subscription<S: Storage>(
         storage: S,
         origin_attributes: HashMap<String, String>,
         app_server_key: Option<&str>,
         registration_key: Option<&str>,
-        priviledged: bool) -> Result<Subscription, SubscriptionError> {
+        priviledged: bool,
+    ) -> Result<Subscription, SubscriptionError> {
         if let Ok(con) = Connect::connect::<Connect>(None) {
             let uaid = con.uaid();
             let chid = storage.generate_channel_id();
             if let Ok(endpoint_data) = con.subscribe(&chid, app_server_key, registration_key) {
-                let private_key = Crypto::generate_key();
+                let private_key = Crypto::generate_key().unwrap();
                 storage.create_record(
                     &uaid,
                     &chid,
@@ -79,8 +79,8 @@ impl Subscriber for Subscription {
                     endpoint: endpoint_data.endpoint.clone(),
                     keys: SubscriptionKeys {
                         p256dh: private_key.public.clone(),
-                        auth: private_key.auth.clone()
-                    }
+                        auth: private_key.auth.clone(),
+                    },
                 });
             }
         }
@@ -96,8 +96,7 @@ impl Subscriber for Subscription {
     }
 
     // remove a subscription
-    fn del_subscription<S: Storage>(store: S, chid: ChannelID) -> Result<bool, SubscriptionError>{
+    fn del_subscription<S: Storage>(store: S, chid: ChannelID) -> Result<bool, SubscriptionError> {
         Ok(false)
     }
-
 }

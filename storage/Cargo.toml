@@ -6,3 +6,4 @@ edition = "2018"
 
 [dependencies]
 crypto = {path = "../crypto"}
+openssl = "0.10"

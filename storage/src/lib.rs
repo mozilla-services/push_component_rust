@@ -2,6 +2,8 @@
  */
 extern crate crypto;
 
+use openssl::ec::EcKey;
+use openssl::pkey::Private;
 use std::collections::HashMap;
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -103,7 +105,6 @@ impl Store {
     fn connect() -> impl Storage {
         Store
     }
-
 }
 
 // TODO: Fill this out (pretty skeletal)
@@ -125,7 +126,7 @@ impl Storage for Store {
             origin_attributes: origin_attributes.clone(),
             push_count: 0,
             last_push: 0,
-            private_key: private_key.private.clone(),
+            private_key: private_key.serialize().unwrap(),
             auth_secret: server_auth.to_string(),
             system_record: false,
             app_server_key: None,
@@ -158,4 +159,3 @@ impl Storage for Store {
         String::from("deadbeef00000000decafbad00000000")
     }
 }
-

@@ -1,5 +1,8 @@
 /* Handles cryptographic functions.
  * Depending on platform, this may call various libraries or have other dependencies.
+ *
+ * This uses prime256v1 EC encryption that should come from internal crypto calls. The "application-services"
+ * module compiles openssl, however, so might be enough to tie into that. 
  */
 use std::collections::HashMap;
 
